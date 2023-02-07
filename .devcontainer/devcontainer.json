@@ -1,0 +1,20 @@
+{
+  "name": "Elixir 1.14",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [
+    4000
+  ],
+  "postCreateCommand": ".devcontainer/scripts/post-create",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "JakeBecker.elixir-ls",
+        "phoenixframework.phoenix",
+        "bradlc.vscode-tailwindcss",
+        "pgourlain.erlang"
+      ]
+    }
+  }
+}
