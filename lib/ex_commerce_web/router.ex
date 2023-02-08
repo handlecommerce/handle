@@ -21,6 +21,12 @@ defmodule ExCommerceWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    live "/sites", SiteLive.Index, :index
+    live "/sites/new", SiteLive.Index, :new
+    live "/sites/:id/edit", SiteLive.Index, :edit
+    live "/sites/:id", SiteLive.Show, :show
+    live "/sites/:id/show/edit", SiteLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
