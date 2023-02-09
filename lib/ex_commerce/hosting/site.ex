@@ -12,9 +12,11 @@ defmodule ExCommerce.Hosting.Site do
         }
 
   schema "sites" do
-    field :archived_at, :naive_datetime
-    field :name, :string
-    field :subdomain, :string
+    field(:archived_at, :naive_datetime)
+    field(:name, :string)
+    field(:subdomain, :string)
+
+    has_many(:assets, ExCommerce.Resources.Asset)
 
     timestamps()
   end

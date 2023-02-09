@@ -27,6 +27,15 @@ defmodule ExCommerceWeb.Router do
     live "/sites/:id/edit", SiteLive.Index, :edit
     live "/sites/:id", SiteLive.Show, :show
     live "/sites/:id/show/edit", SiteLive.Show, :edit
+
+    scope "/sites/:site_id" do
+      live "/assets", AssetLive.Index, :index
+      live "/assets/new", AssetLive.Index, :new
+      live "/assets/:id/edit", AssetLive.Index, :edit
+
+      live "/assets/:id", AssetLive.Show, :show
+      live "/assets/:id/show/edit", AssetLive.Show, :edit
+    end
   end
 
   # Other scopes may use custom stacks.

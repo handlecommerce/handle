@@ -7,4 +7,12 @@ defmodule ExCommerce.Factory do
       subdomain: sequence(:subdomain, &"site-#{&1}")
     }
   end
+
+  def asset_factory do
+    %ExCommerce.Resources.Asset{
+      site: build(:site),
+      key: sequence(:key, &"/my/asset-#{&1}"),
+      content: "Hello World"
+    }
+  end
 end
