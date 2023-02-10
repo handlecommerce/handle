@@ -32,7 +32,7 @@ defmodule ExCommerceWeb.AssetLive.FormComponent do
 
   @impl true
   def update(%{asset: asset} = assigns, socket) do
-    changeset = Resources.change_asset(asset)
+    changeset = Resources.change_text_asset(asset)
 
     {:ok,
      socket
@@ -44,7 +44,7 @@ defmodule ExCommerceWeb.AssetLive.FormComponent do
   def handle_event("validate", %{"asset" => asset_params}, socket) do
     changeset =
       socket.assigns.asset
-      |> Resources.change_asset(asset_params)
+      |> Resources.change_text_asset(asset_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, :changeset, changeset)}
@@ -55,7 +55,7 @@ defmodule ExCommerceWeb.AssetLive.FormComponent do
   end
 
   defp save_asset(socket, :edit, asset_params) do
-    case Resources.update_asset(socket.assigns.asset, asset_params) do
+    case Resources.update_text_asset(socket.assigns.asset, asset_params) do
       {:ok, _asset} ->
         {:noreply,
          socket
@@ -68,7 +68,7 @@ defmodule ExCommerceWeb.AssetLive.FormComponent do
   end
 
   defp save_asset(socket, :new, asset_params) do
-    case Resources.create_asset(socket.assigns.site, asset_params) do
+    case Resources.create_text_asset(socket.assigns.site, asset_params) do
       {:ok, _asset} ->
         {:noreply,
          socket

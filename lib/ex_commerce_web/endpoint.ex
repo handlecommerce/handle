@@ -47,5 +47,10 @@ defmodule ExCommerceWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+
+  plug ExCommerceWeb.Plugs.HostedRouter,
+    router: ExCommerce.Routers.HostedRouter,
+    env: Application.compile_env(:ex_commerce, :environment)
+
   plug ExCommerceWeb.Router
 end

@@ -6,6 +6,7 @@ defmodule ExCommerce.Repo.Migrations.CreateAssets do
       add :content, :string
       add :key, :string, null: false
       add :site_id, references(:sites, on_delete: :nothing), null: false
+      add :type, :string, null: false
 
       add :archived_at, :naive_datetime
       timestamps()

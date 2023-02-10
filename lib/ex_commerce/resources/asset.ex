@@ -10,6 +10,7 @@ defmodule ExCommerce.Resources.Asset do
           id: pos_integer(),
           key: String.t(),
           content: String.t() | nil,
+          type: :text | :binary,
           site: Site.t(),
           site_id: pos_integer(),
           archived_at: NaiveDateTime.t() | nil,
@@ -20,6 +21,7 @@ defmodule ExCommerce.Resources.Asset do
   schema "assets" do
     field(:key, :string)
     field(:content, :string)
+    field(:type, Ecto.Enum, values: [:text, :binary])
     belongs_to(:site, Site)
 
     field(:archived_at, :naive_datetime)
@@ -27,9 +29,10 @@ defmodule ExCommerce.Resources.Asset do
   end
 
   @doc false
-  def changeset(asset, attrs) do
+  def text_changeset(asset, attrs) do
     asset
     |> cast(attrs, [:content, :key])
+    |> put_change(:type, :text)
     |> validate_required([:key])
   end
 

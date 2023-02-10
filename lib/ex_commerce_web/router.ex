@@ -32,9 +32,14 @@ defmodule ExCommerceWeb.Router do
       live "/assets", AssetLive.Index, :index
       live "/assets/new", AssetLive.Index, :new
       live "/assets/:id/edit", AssetLive.Index, :edit
-
       live "/assets/:id", AssetLive.Show, :show
       live "/assets/:id/show/edit", AssetLive.Show, :edit
+
+      live "/routes", SiteRouteLive.Index, :index
+      live "/routes/new", SiteRouteLive.Index, :new
+      live "/routes/:id/edit", SiteRouteLive.Index, :edit
+      live "/routes/:id", SiteRouteLive.Show, :show
+      live "/routes/:id/show/edit", SiteRouteLive.Show, :edit
     end
   end
 

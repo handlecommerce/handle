@@ -51,17 +51,17 @@ defmodule ExCommerce.Resources do
 
   ## Examples
 
-      iex> create_asset(%{field: value})
+      iex> create_text_asset(site, %{field: value})
       {:ok, %Asset{}}
 
-      iex> create_asset(%{field: bad_value})
+      iex> create_text_asset(site, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_asset(%Site{} = site, attrs \\ %{}) do
+  def create_text_asset(%Site{} = site, attrs \\ %{}) do
     site
     |> Ecto.build_assoc(:assets, %{})
-    |> Asset.changeset(attrs)
+    |> Asset.text_changeset(attrs)
     |> Repo.insert()
   end
 
@@ -77,9 +77,9 @@ defmodule ExCommerce.Resources do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_asset(%Asset{} = asset, attrs) do
+  def update_text_asset(%Asset{} = asset, attrs) do
     asset
-    |> Asset.changeset(attrs)
+    |> Asset.text_changeset(attrs)
     |> Repo.update()
   end
 
@@ -108,7 +108,17 @@ defmodule ExCommerce.Resources do
       %Ecto.Changeset{data: %Asset{}}
 
   """
-  def change_asset(%Asset{} = asset, attrs \\ %{}) do
-    Asset.changeset(asset, attrs)
+  def change_text_asset(%Asset{} = asset, attrs \\ %{}) do
+    Asset.text_changeset(asset, attrs)
+  end
+
+  def asset_select_options(%Site{} = site, _search \\ "") do
+    base_query =
+      Asset
+      |> Repo.unarchived()
+      |> Asset.for_site(site)
+
+    from(q in base_query, select: {q.key, q.id})
+    |> Repo.all()
   end
 end

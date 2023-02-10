@@ -1,0 +1,44 @@
+<.header>
+  Listing routes
+  <:actions>
+    <.link patch={~p"/sites/#{@site}/routes/new"}>
+      <.button>New Route</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="site_routes"
+  rows={@site_routes}
+  row_click={&JS.navigate(~p"/sites/#{@site}/routes/#{&1}")}
+>
+  <:col :let={site_route} label="Path"><%= site_route.path %></:col>
+  <:action :let={site_route}>
+    <div class="sr-only">
+      <.link navigate={~p"/sites/#{@site}/routes/#{site_route}"}>Show</.link>
+    </div>
+    <.link patch={~p"/sites/#{@site}/routes/#{site_route}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={site_route}>
+    <.link phx-click={JS.push("delete", value: %{id: site_route.id})} data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="site_route-modal"
+  show
+  on_cancel={JS.navigate(~p"/sites/#{@site}/routes")}
+>
+  <.live_component
+    module={ExCommerceWeb.SiteRouteLive.FormComponent}
+    id={@site_route.id || :new}
+    title={@page_title}
+    action={@live_action}
+    site={@site}
+    site_route={@site_route}
+    navigate={~p"/sites/#{@site}/routes"}
+  />
+</.modal>
