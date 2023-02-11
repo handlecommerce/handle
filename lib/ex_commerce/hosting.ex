@@ -6,7 +6,7 @@ defmodule ExCommerce.Hosting do
   import Ecto.Query, warn: false
   alias ExCommerce.Repo
 
-  alias ExCommerce.Hosting.Site
+  alias ExCommerce.Hosting.{Router, Site}
   alias ExCommerce.Resources.Asset
 
   @doc """
@@ -121,118 +121,125 @@ defmodule ExCommerce.Hosting do
     Site.changeset(site, attrs)
   end
 
-  alias ExCommerce.Hosting.SiteRoute
+  alias ExCommerce.Hosting.Route
 
   @doc """
-  Returns the list of site_routes.
+  Returns the list of routes.
 
   ## Examples
 
-      iex> list_site_routes(site)
-      [%SiteRoute{}, ...]
+      iex> list_routes(site)
+      [%Route{}, ...]
 
   """
-  def list_site_routes(%Site{} = site) do
-    SiteRoute
+  def list_routes(%Site{} = site) do
+    Route
     |> Repo.unarchived()
-    |> SiteRoute.for_site(site)
+    |> Route.for_site(site)
     |> Repo.all()
   end
 
   @doc """
-  Gets a single site_route.
+  Gets a single route.
 
   Raises `Ecto.NoResultsError` if the Site route does not exist.
 
   ## Examples
 
-      iex> get_site_route!(site, 123)
-      %SiteRoute{}
+      iex> get_route!(site, 123)
+      %Route{}
 
-      iex> get_site_route!(site, 456)
+      iex> get_route!(site, 456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_site_route!(%Site{} = site, id) do
-    SiteRoute
+  def get_route!(%Site{} = site, id) do
+    Route
     |> Repo.unarchived()
-    |> SiteRoute.for_site(site)
+    |> Route.for_site(site)
     |> Repo.get!(id)
   end
 
   @doc """
-  Creates a site_route.
+  Creates a route.
 
   ## Examples
 
-      iex> create_site_route(site, %{field: value})
-      {:ok, %SiteRoute{}}
+      iex> create_route(site, %{field: value})
+      {:ok, %Route{}}
 
-      iex> create_site_route(site, %{field: bad_value})
+      iex> create_route(site, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_site_route(%Site{} = site, attrs \\ %{}) do
+  def create_route(%Site{} = site, attrs \\ %{}) do
+    Router.reset_for(site)
+
     site
-    |> Ecto.build_assoc(:site_routes)
-    |> SiteRoute.changeset(attrs)
+    |> Ecto.build_assoc(:routes)
+    |> Route.changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a site_route.
+  Updates a route.
 
   ## Examples
 
-      iex> update_site_route(site_route, %{field: new_value})
-      {:ok, %SiteRoute{}}
+      iex> update_route(route, %{field: new_value})
+      {:ok, %Route{}}
 
-      iex> update_site_route(site_route, %{field: bad_value})
+      iex> update_route(route, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_site_route(%SiteRoute{} = site_route, attrs) do
-    site_route
-    |> SiteRoute.changeset(attrs)
+  def update_route(%Route{} = route, attrs) do
+    Router.reset_for(route)
+
+    route
+    |> Route.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a site_route.
+  Deletes a route.
 
   ## Examples
 
-      iex> delete_site_route(site_route)
-      {:ok, %SiteRoute{}}
+      iex> delete_route(route)
+      {:ok, %Route{}}
 
-      iex> delete_site_route(site_route)
+      iex> delete_route(route)
       {:error, %Ecto.Changeset{}}
 
   """
-  def archive_site_route(%SiteRoute{} = site_route) do
-    Repo.archive(site_route)
+  def archive_route(%Route{} = route) do
+    Router.reset_for(route)
+
+    Repo.archive(route)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking site_route changes.
+  Returns an `%Ecto.Changeset{}` for tracking route changes.
 
   ## Examples
 
-      iex> change_site_route(site_route)
-      %Ecto.Changeset{data: %SiteRoute{}}
+      iex> change_route(route)
+      %Ecto.Changeset{data: %Route{}}
 
   """
-  def change_site_route(%SiteRoute{} = site_route, attrs \\ %{}) do
-    SiteRoute.changeset(site_route, attrs)
+  def change_route(%Route{} = route, attrs \\ %{}) do
+    Route.changeset(route, attrs)
   end
 
   @spec get_asset!(Site.t(), String.t()) :: Asset.t()
   def get_asset!(%Site{id: site_id}, route) do
     query =
-      from s in SiteRoute,
+      from(s in Route,
         join: a in assoc(s, :asset),
         where: s.path == ^(route || "/") and s.site_id == ^site_id,
         select: a
+      )
 
     Repo.one!(query)
   end

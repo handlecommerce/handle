@@ -21,18 +21,18 @@ defmodule ExCommerce.HostingFixtures do
   end
 
   @doc """
-  Generate a site_route.
+  Generate a route.
   """
-  def site_route_fixture(attrs \\ %{}) do
-    {:ok, site_route} =
+  def route_fixture(attrs \\ %{}) do
+    {:ok, route} =
       attrs
       |> Enum.into(%{
         archived_at: ~N[2023-02-08 00:30:00],
         path: "some path",
         title: "some title"
       })
-      |> ExCommerce.Hosting.create_site_route()
+      |> ExCommerce.Hosting.create_route()
 
-    site_route
+    route
   end
 end

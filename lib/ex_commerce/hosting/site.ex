@@ -8,7 +8,7 @@ defmodule ExCommerce.Hosting.Site do
           name: String.t(),
           subdomain: String.t() | nil,
           assets: list(ExCommerce.Resources.Asset) | Ecto.Association.NotLoaded.t(),
-          site_routes: list(ExCommerce.Hosting.SiteRoute) | Ecto.Association.NotLoaded.t(),
+          routes: list(ExCommerce.Hosting.Route) | Ecto.Association.NotLoaded.t(),
           archived_at: NaiveDateTime.t() | nil,
           inserted_at: NaiveDateTime.t(),
           updated_at: NaiveDateTime.t()
@@ -20,7 +20,7 @@ defmodule ExCommerce.Hosting.Site do
     field(:subdomain, :string)
 
     has_many(:assets, ExCommerce.Resources.Asset)
-    has_many(:site_routes, ExCommerce.Hosting.SiteRoute)
+    has_many(:routes, ExCommerce.Hosting.Route)
 
     timestamps()
   end
@@ -34,7 +34,8 @@ defmodule ExCommerce.Hosting.Site do
   end
 
   def for_subdomain(queryable \\ __MODULE__, subdomain) do
-    from q in queryable,
+    from(q in queryable,
       where: q.subdomain == ^subdomain
+    )
   end
 end

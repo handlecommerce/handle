@@ -1,8 +1,8 @@
-defmodule ExCommerceWeb.SiteRouteLive.Index do
+defmodule ExCommerceWeb.RouteLive.Index do
   use ExCommerceWeb, :live_view
 
   alias ExCommerce.Hosting
-  alias ExCommerce.Hosting.{Site, SiteRoute}
+  alias ExCommerce.Hosting.{Site, Route}
 
   @impl true
   def mount(params, _session, socket) do
@@ -11,7 +11,7 @@ defmodule ExCommerceWeb.SiteRouteLive.Index do
     {:ok,
      socket
      |> assign(:site, site)
-     |> assign(:site_routes, list_site_routes(site))}
+     |> assign(:routes, list_routes(site))}
   end
 
   @impl true
@@ -22,32 +22,32 @@ defmodule ExCommerceWeb.SiteRouteLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Site route")
-    |> assign(:site_route, Hosting.get_site_route!(socket.assigns.site, id))
+    |> assign(:route, Hosting.get_route!(socket.assigns.site, id))
   end
 
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Site route")
-    |> assign(:site_route, %SiteRoute{})
+    |> assign(:route, %Route{})
   end
 
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Site routes")
-    |> assign(:site_route, nil)
+    |> assign(:route, nil)
   end
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     site = socket.assigns.site
 
-    site_route = Hosting.get_site_route!(site, id)
-    {:ok, _} = Hosting.archive_site_route(site_route)
+    route = Hosting.get_route!(site, id)
+    {:ok, _} = Hosting.archive_route(route)
 
-    {:noreply, assign(socket, :site_routes, list_site_routes(site))}
+    {:noreply, assign(socket, :routes, list_routes(site))}
   end
 
-  defp list_site_routes(%Site{} = site) do
-    Hosting.list_site_routes(site)
+  defp list_routes(%Site{} = site) do
+    Hosting.list_routes(site)
   end
 end

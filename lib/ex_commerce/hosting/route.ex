@@ -1,16 +1,64 @@
 defmodule ExCommerce.Hosting.Route do
-  defstruct [:segments]
+  use Ecto.Schema
+  import Ecto.Changeset
+  import Ecto.Query, only: [from: 2]
+
+  alias ExCommerce.Hosting.Site
+  alias ExCommerce.Resources.Asset
 
   @type segment_t :: {:parameter, String.t()} | {:segment, String.t()} | {:glob, String.t()}
 
-  @type t :: %__MODULE__{segments: [segment_t()]}
+  @type t :: %__MODULE__{
+          id: pos_integer(),
+          path: String.t(),
+          site: Site.t() | Ecto.Association.NotLoaded.t(),
+          site_id: pos_integer(),
+          asset: Asset.t() | nil | Ecto.Association.NotLoaded.t(),
+          asset_id: pos_integer(),
+          segments: [segment_t] | nil,
+          archived_at: NaiveDateTime.t() | nil,
+          inserted_at: NaiveDateTime.t(),
+          updated_at: NaiveDateTime.t()
+        }
 
-  @spec parse(String.t()) :: {:ok, t()} | {:error, String.t()}
+  schema "routes" do
+    field(:path, :string)
+    belongs_to(:site, Site)
+    belongs_to(:asset, Asset)
+
+    # TODO: Update this to a custom type
+    field(:segments, :string, virtual: true)
+
+    field(:archived_at, :naive_datetime)
+    timestamps()
+  end
+
+  @doc false
+  def changeset(route, attrs) do
+    route
+    |> cast(attrs, [:path, :asset_id])
+    |> validate_required([:path])
+  end
+
+  def for_site(queryable \\ __MODULE__, %Site{id: site_id}) do
+    from(q in queryable, where: q.site_id == ^site_id)
+  end
+
+  @spec with_segments([t]) :: [t]
+  def with_segments(routes) when is_list(routes) do
+    routes
+    |> Enum.map(fn route ->
+      {:ok, segments} = parse(route.path)
+      %{route | segments: segments}
+    end)
+  end
+
+  @spec parse(String.t()) :: {:ok, [segment_t]} | {:error, String.t()}
   @doc """
   Parse a route string into the pattern matching segments
 
       iex> ExCommerce.Hosting.Route.parse("/")
-      {:ok, %ExCommerce.Hosting.Route{segments: [segment: ""]}}
+      {:ok, %ExCommerce.Hosting.Route{segments: []}}
 
   Segments can be deeply nested too.
 
@@ -40,21 +88,21 @@ defmodule ExCommerce.Hosting.Route do
     route
     |> String.trim("/")
     |> String.split("/")
+    |> Enum.reject(&(&1 == ""))
     |> Enum.map(&categorize_segment/1)
     |> verify_segments()
   end
 
-  @spec match(t(), String.t()) :: {:ok, map} | :no_match
-  def match(%__MODULE__{segments: segments}, path) do
-    path_segments =
-      path
-      |> String.trim("/")
-      |> String.split("/")
-
+  @spec match(t(), String.t()) :: {:ok, map} | :no_match | {:error, String.t()}
+  def match(%__MODULE__{segments: segments}, path_segments) do
     do_match(segments, path_segments)
   end
 
   defp do_match(params \\ %{}, segments, path_segments)
+
+  # Segments are not loaded yet
+  defp do_match(_params, nil, _),
+    do: {:error, "Route segments not loaded. Please call with_segments/1"}
 
   # Nothing remaining to match, so this is a success
   defp do_match(params, [], []), do: {:ok, params}
@@ -90,7 +138,7 @@ defmodule ExCommerce.Hosting.Route do
     glob_index = Enum.find_index(segments, &(elem(&1, 0) == :glob))
 
     if is_nil(glob_index) || glob_index == segment_count - 1 do
-      {:ok, %__MODULE__{segments: segments}}
+      {:ok, segments}
     else
       {:error, "Glob matchers must be at the end of the route"}
     end

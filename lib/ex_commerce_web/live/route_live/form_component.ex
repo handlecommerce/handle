@@ -1,4 +1,4 @@
-defmodule ExCommerceWeb.SiteRouteLive.FormComponent do
+defmodule ExCommerceWeb.RouteLive.FormComponent do
   use ExCommerceWeb, :live_component
 
   alias ExCommerce.Hosting
@@ -9,13 +9,13 @@ defmodule ExCommerceWeb.SiteRouteLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage site_route records in your database.</:subtitle>
+        <:subtitle>Use this form to manage route records in your database.</:subtitle>
       </.header>
 
       <.simple_form
         :let={f}
         for={@changeset}
-        id="site_route-form"
+        id="route-form"
         phx-target={@myself}
         phx-change="validate"
         phx-submit="save"
@@ -31,8 +31,8 @@ defmodule ExCommerceWeb.SiteRouteLive.FormComponent do
   end
 
   @impl true
-  def update(%{site_route: site_route} = assigns, socket) do
-    changeset = Hosting.change_site_route(site_route)
+  def update(%{route: route} = assigns, socket) do
+    changeset = Hosting.change_route(route)
 
     assets = ExCommerce.Resources.asset_select_options(assigns.site)
 
@@ -44,22 +44,22 @@ defmodule ExCommerceWeb.SiteRouteLive.FormComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"site_route" => site_route_params}, socket) do
+  def handle_event("validate", %{"route" => route_params}, socket) do
     changeset =
-      socket.assigns.site_route
-      |> Hosting.change_site_route(site_route_params)
+      socket.assigns.route
+      |> Hosting.change_route(route_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("save", %{"site_route" => site_route_params}, socket) do
-    save_site_route(socket, socket.assigns.action, site_route_params)
+  def handle_event("save", %{"route" => route_params}, socket) do
+    save_route(socket, socket.assigns.action, route_params)
   end
 
-  defp save_site_route(socket, :edit, site_route_params) do
-    case Hosting.update_site_route(socket.assigns.site_route, site_route_params) do
-      {:ok, _site_route} ->
+  defp save_route(socket, :edit, route_params) do
+    case Hosting.update_route(socket.assigns.route, route_params) do
+      {:ok, _route} ->
         {:noreply,
          socket
          |> put_flash(:info, "Site route updated successfully")
@@ -70,9 +70,9 @@ defmodule ExCommerceWeb.SiteRouteLive.FormComponent do
     end
   end
 
-  defp save_site_route(socket, :new, site_route_params) do
-    case Hosting.create_site_route(socket.assigns.site, site_route_params) do
-      {:ok, _site_route} ->
+  defp save_route(socket, :new, route_params) do
+    case Hosting.create_route(socket.assigns.site, route_params) do
+      {:ok, _route} ->
         {:noreply,
          socket
          |> put_flash(:info, "Site route created successfully")

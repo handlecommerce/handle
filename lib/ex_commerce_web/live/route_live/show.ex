@@ -1,4 +1,4 @@
-defmodule ExCommerceWeb.SiteRouteLive.Show do
+defmodule ExCommerceWeb.RouteLive.Show do
   use ExCommerceWeb, :live_view
 
   alias ExCommerce.Hosting
@@ -14,7 +14,7 @@ defmodule ExCommerceWeb.SiteRouteLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:site_route, Hosting.get_site_route!(socket.assigns.site, id))}
+     |> assign(:route, Hosting.get_route!(socket.assigns.site, id))}
   end
 
   defp page_title(:show), do: "Show Site route"

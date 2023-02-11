@@ -6,8 +6,8 @@ defmodule ExCommerce.Hosting.RouteTest do
 
   describe "parse/2" do
     test "parses straight path" do
-      assert {:ok, %Route{segments: [segment: ""]}} == Route.parse("")
-      assert {:ok, %Route{segments: [segment: ""]}} == Route.parse("/")
+      assert {:ok, %Route{segments: []}} == Route.parse("")
+      assert {:ok, %Route{segments: []}} == Route.parse("/")
 
       assert {:ok, %Route{segments: [segment: "test"]}} == Route.parse("test")
       assert {:ok, %Route{segments: [segment: "test"]}} == Route.parse("/test")
@@ -58,18 +58,18 @@ defmodule ExCommerce.Hosting.RouteTest do
 
   describe "match/2" do
     test "match path" do
-      assert_route("/", "/", %{})
-      assert_route("/a/b/c", "/a/b/c", %{})
-      assert_route("/products/:id/default", "/products/1234/default/", %{"id" => "1234"})
-      assert_route("/blog/*slug", "/blog/2023-01-01/test", %{"slug" => "2023-01-01/test"})
+      assert_route("/", [], %{})
+      assert_route("/a/b/c", ~w(a b c), %{})
+      assert_route("/products/:id/default", ~w(products 1234 default), %{"id" => "1234"})
+      assert_route("/blog/*slug", ~w(blog 2023-01-01 test), %{"slug" => "2023-01-01/test"})
     end
 
     test "match failures" do
-      refute_route("/", "/test")
-      refute_route("/a/b/c", "/a/c/c")
-      refute_route("/a/b/c", "/a/b")
-      refute_route("/:id", "/123/details")
-      refute_route("/a/*glob", "/a")
+      refute_route("/", ~w("test"))
+      refute_route("/a/b/c", ~w(a c c))
+      refute_route("/a/b/c", ~w(a b))
+      refute_route("/:id", ~w(123 details))
+      refute_route("/a/*glob", ~w(a))
     end
   end
 

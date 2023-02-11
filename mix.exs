@@ -53,6 +53,7 @@ defmodule ExCommerce.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:liquex, "~> 0.10.0"},
+      {:cachex, "~> 3.6"},
       {:ex_machina, "~> 2.7.0", only: :test},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false}

@@ -17,7 +17,9 @@ defmodule ExCommerce.Application do
       # Start Finch
       {Finch, name: ExCommerce.Finch},
       # Start the Endpoint (http/https)
-      ExCommerceWeb.Endpoint
+      ExCommerceWeb.Endpoint,
+      # Start caching server
+      {Cachex, name: :ex_commerce_cache}
       # Start a worker by calling: ExCommerce.Worker.start_link(arg)
       # {ExCommerce.Worker, arg}
     ]

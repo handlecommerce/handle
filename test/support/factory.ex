@@ -16,8 +16,8 @@ defmodule ExCommerce.Factory do
     }
   end
 
-  def site_route_factory do
-    %ExCommerce.Hosting.SiteRoute{
+  def route_factory do
+    %ExCommerce.Hosting.Route{
       site: build(:site),
       path: "/"
     }
