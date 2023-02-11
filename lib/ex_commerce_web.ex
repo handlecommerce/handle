@@ -99,7 +99,7 @@ defmodule ExCommerceWeb do
     quote do
       use Phoenix.VerifiedRoutes,
         endpoint: ExCommerceWeb.Endpoint,
-        router: ExCommerceWeb.Router,
+        router: ExCommerceWeb.Routers.Standard,
         statics: ExCommerceWeb.static_paths()
     end
   end

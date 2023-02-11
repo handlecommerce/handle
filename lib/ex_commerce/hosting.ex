@@ -7,6 +7,7 @@ defmodule ExCommerce.Hosting do
   alias ExCommerce.Repo
 
   alias ExCommerce.Hosting.Site
+  alias ExCommerce.Resources.Asset
 
   @doc """
   Returns the list of sites.
@@ -43,12 +44,12 @@ defmodule ExCommerce.Hosting do
     |> Repo.get!(id)
   end
 
-  @spec get_site_by_domain(String.t()) :: Site.t()
+  @spec get_site_by_domain(String.t()) :: Site.t() | nil
   def get_site_by_domain(domain) do
     Site
     |> Repo.unarchived()
     |> Site.for_subdomain(domain)
-    |> Repo.one!()
+    |> Repo.one()
   end
 
   @doc """
@@ -223,5 +224,16 @@ defmodule ExCommerce.Hosting do
   """
   def change_site_route(%SiteRoute{} = site_route, attrs \\ %{}) do
     SiteRoute.changeset(site_route, attrs)
+  end
+
+  @spec get_asset!(Site.t(), String.t()) :: Asset.t()
+  def get_asset!(%Site{id: site_id}, route) do
+    query =
+      from s in SiteRoute,
+        join: a in assoc(s, :asset),
+        where: s.path == ^(route || "/") and s.site_id == ^site_id,
+        select: a
+
+    Repo.one!(query)
   end
 end

@@ -15,4 +15,11 @@ defmodule ExCommerce.Factory do
       content: "Hello World"
     }
   end
+
+  def site_route_factory do
+    %ExCommerce.Hosting.SiteRoute{
+      site: build(:site),
+      path: "/"
+    }
+  end
 end

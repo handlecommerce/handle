@@ -1,4 +1,4 @@
-defmodule ExCommerce.Routers.HostedRouter do
+defmodule ExCommerceWeb.Routers.Hosted do
   use ExCommerceWeb, :router
 
   import ExCommerceWeb.UserAuth
@@ -17,7 +17,7 @@ defmodule ExCommerce.Routers.HostedRouter do
     # Use the default browser stack
     pipe_through :browser
 
-    get "/", PageController, :home
+    get "/*path", PageController, :show
   end
 
   # Other scopes may use custom stacks.

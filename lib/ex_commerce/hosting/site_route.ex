@@ -3,7 +3,7 @@ defmodule ExCommerce.Hosting.SiteRoute do
   import Ecto.Changeset
   import Ecto.Query, only: [from: 2]
 
-  alias ExCommerce.Hosting.Site
+  alias ExCommerce.Hosting.{Route, Site}
   alias ExCommerce.Resources.Asset
 
   @type t :: %__MODULE__{
@@ -19,11 +19,11 @@ defmodule ExCommerce.Hosting.SiteRoute do
         }
 
   schema "site_routes" do
-    field :path, :string
-    belongs_to :site, Site
-    belongs_to :asset, Asset
+    field(:path, :string)
+    belongs_to(:site, Site)
+    belongs_to(:asset, Asset)
 
-    field :archived_at, :naive_datetime
+    field(:archived_at, :naive_datetime)
     timestamps()
   end
 
@@ -36,5 +36,11 @@ defmodule ExCommerce.Hosting.SiteRoute do
 
   def for_site(queryable \\ __MODULE__, %Site{id: site_id}) do
     from(q in queryable, where: q.site_id == ^site_id)
+  end
+
+  def route(%__MODULE__{path: path}) do
+    {:ok, route} = Route.parse(path)
+
+    route
   end
 end

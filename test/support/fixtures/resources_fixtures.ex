@@ -16,7 +16,7 @@ defmodule ExCommerce.ResourcesFixtures do
         file_path: "some file_path",
         filename: "some filename"
       })
-      |> ExCommerce.Resources.create_asset()
+      |> ExCommerce.Resources.create_text_asset()
 
     asset
   end

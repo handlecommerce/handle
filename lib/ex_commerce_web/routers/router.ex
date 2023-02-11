@@ -1,4 +1,4 @@
-defmodule ExCommerceWeb.Router do
+defmodule ExCommerceWeb.Routers.Standard do
   use ExCommerceWeb, :router
 
   import ExCommerceWeb.UserAuth
