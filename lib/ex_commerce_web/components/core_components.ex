@@ -38,6 +38,7 @@ defmodule ExCommerceWeb.CoreComponents do
   attr :show, :boolean, default: false
   attr :on_cancel, JS, default: %JS{}
   attr :on_confirm, JS, default: %JS{}
+  attr :hide_on_escape, :boolean, default: true
 
   slot :inner_block, required: true
   slot :title
@@ -67,9 +68,9 @@ defmodule ExCommerceWeb.CoreComponents do
             <.focus_wrap
               id={"#{@id}-container"}
               phx-mounted={@show && show_modal(@id)}
-              phx-window-keydown={hide_modal(@on_cancel, @id)}
+              phx-window-keydown={@hide_on_escape && hide_modal(@on_cancel, @id)}
               phx-key="escape"
-              phx-click-away={hide_modal(@on_cancel, @id)}
+              phx-click-away={@hide_on_escape && hide_modal(@on_cancel, @id)}
               class="hidden relative rounded-2xl bg-white p-14 shadow-lg shadow-zinc-700/10 ring-1 ring-zinc-700/10 transition"
             >
               <div class="absolute top-6 right-5">
@@ -342,6 +343,12 @@ defmodule ExCommerceWeb.CoreComponents do
     <%= @value %></textarea>
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
+    """
+  end
+
+  def input(%{type: "hidden"} = assigns) do
+    ~H"""
+    <input type="hidden" name={@name} id={@id || @name} {@rest} />
     """
   end
 

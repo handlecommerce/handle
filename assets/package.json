@@ -2,5 +2,8 @@
   "devDependencies": {
     "@types/phoenix": "^1.5.4",
     "@types/phoenix_live_view": "^0.15.1"
+  },
+  "dependencies": {
+    "monaco-editor": "^0.35.0"
   }
 }
