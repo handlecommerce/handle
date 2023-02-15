@@ -348,7 +348,7 @@ defmodule ExCommerceWeb.CoreComponents do
 
   def input(%{type: "hidden"} = assigns) do
     ~H"""
-    <input type="hidden" name={@name} id={@id || @name} {@rest} />
+    <input type="hidden" name={@name} id={@id || @name} {@rest} value={@value} />
     """
   end
 
