@@ -5,6 +5,8 @@ defmodule ExCommerceWeb.AssetLive.FormComponent do
   alias ExCommerceWeb.MonacoEditor
 
   @impl true
+  @spec render(map) :: Phoenix.LiveView.Rendered.t()
+
   def render(assigns) do
     ~H"""
     <div>
@@ -15,6 +17,7 @@ defmodule ExCommerceWeb.AssetLive.FormComponent do
 
       <.simple_form :let={f} for={@changeset} id="asset-form" phx-target={@myself} phx-submit="save">
         <MonacoEditor.editor field={{f, :content}} label="Contents" />
+
         <.input field={{f, :key}} type="text" label="Filename" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Asset</.button>

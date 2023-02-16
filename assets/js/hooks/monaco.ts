@@ -24,14 +24,14 @@ self.MonacoEnvironment = {
 };
 
 interface IMonacoEditor extends ILiveViewHook {
-  syncedElement: HTMLInputElement;
-  onDidChangeContent(e: monaco.editor.IModelContentChangedEvent): void;
+  save(): void | Promise<void>;
+  syncElement: HTMLInputElement;
   editor: monaco.editor.IStandaloneCodeEditor;
 }
 
 const MonacoEditor = {
   mounted(this: IMonacoEditor) {
-    this.syncedElement = document.getElementById(this.el.dataset['editorField']!) as HTMLInputElement;
+    this.syncElement = document.getElementById(this.el.dataset['editorField']!) as HTMLInputElement;
 
     this.editor = monaco.editor.create(this.el, {
       language: 'html',
@@ -40,13 +40,26 @@ const MonacoEditor = {
       value: this.el.dataset['editorValue'],
     });
 
+    // Add a save action with CMD/CTRL-S
+    this.editor.addAction({
+      id: "Save Asset",
+      label: "Save Asset",
+      keybindings: [
+        // tslint:disable-next-line: no-bitwise
+        monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS
+      ],
 
-    this.editor.getModel()?.onDidChangeContent(this.onDidChangeContent.bind(this));
+      run: () => this.save()
+    });
+
+    this.editor.getModel()?.onDidChangeContent(() => {
+      this.syncElement.value = this.editor.getValue();
+    });
     window.addEventListener("resize", () => this.editor.layout());
   },
 
-  onDidChangeContent(this: IMonacoEditor, e: monaco.editor.IModelContentChangedEvent) {
-    this.syncedElement.value = this.editor.getValue();
+  save(this: IMonacoEditor) {
+
   }
 }
 

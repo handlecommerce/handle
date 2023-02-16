@@ -13,46 +13,12 @@
     </script>
   </head>
   <body class="bg-white antialiased">
-    <header class="px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between border-b border-zinc-100 py-3">
-        <div class="flex items-center gap-4">
-          <a href="/" class="px-2 text-[1rem] font-semibold leading-6 text-brand">
-            ExCommerce
-          </a>
-        </div>
-
-        <div class="flex items-center gap-4">
-          <%= if assigns[:current_user] do %>
-            <.link
-              href={~p"/users/settings"}
-              class="text-[0.8125rem] font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
-            >
-              <%= @current_user.email %>
-            </.link>
-            <.link
-              href={~p"/users/log_out"}
-              method="delete"
-              class="text-[0.8125rem] font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
-            >
-              Log out
-            </.link>
-          <% else %>
-            <.link
-              href={~p"/users/register"}
-              class="text-[0.8125rem] font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
-            >
-              Register
-            </.link>
-            <.link
-              href={~p"/users/log_in"}
-              class="text-[0.8125rem] font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
-            >
-              Log in
-            </.link>
-          <% end %>
-        </div>
+    <ExCommerceWeb.Header.header />
+    <div class="flex">
+      <ExCommerceWeb.Sidebar.sidebar />
+      <div class="flex-grow">
+        <%= @inner_content %>
       </div>
-    </header>
-    <%= @inner_content %>
+    </div>
   </body>
 </html>

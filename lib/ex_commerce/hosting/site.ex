@@ -9,6 +9,7 @@ defmodule ExCommerce.Hosting.Site do
           subdomain: String.t() | nil,
           assets: list(ExCommerce.Resources.Asset) | Ecto.Association.NotLoaded.t(),
           routes: list(ExCommerce.Hosting.Route) | Ecto.Association.NotLoaded.t(),
+          products: list(ExCommerce.Catalog.Product) | Ecto.Association.NotLoaded.t(),
           archived_at: NaiveDateTime.t() | nil,
           inserted_at: NaiveDateTime.t(),
           updated_at: NaiveDateTime.t()
@@ -21,6 +22,7 @@ defmodule ExCommerce.Hosting.Site do
 
     has_many(:assets, ExCommerce.Resources.Asset)
     has_many(:routes, ExCommerce.Hosting.Route)
+    has_many(:products, ExCommerce.Catalog.Product)
 
     timestamps()
   end

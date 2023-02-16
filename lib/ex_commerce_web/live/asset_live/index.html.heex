@@ -26,6 +26,7 @@
   :if={@live_action in [:new, :edit]}
   id="asset-modal"
   show
+  hide_on_escape={false}
   on_cancel={JS.navigate(~p"/sites/#{@site}/assets")}
 >
   <.live_component

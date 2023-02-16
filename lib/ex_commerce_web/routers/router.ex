@@ -40,6 +40,12 @@ defmodule ExCommerceWeb.Routers.Standard do
       live("/routes/:id/edit", RouteLive.Index, :edit)
       live("/routes/:id", RouteLive.Show, :show)
       live("/routes/:id/show/edit", RouteLive.Show, :edit)
+
+      live "/products", ProductLive.Index, :index
+      live "/products/new", ProductLive.Index, :new
+      live "/products/:id/edit", ProductLive.Index, :edit
+      live "/products/:id", ProductLive.Show, :show
+      live "/products/:id/show/edit", ProductLive.Show, :edit
     end
   end
 

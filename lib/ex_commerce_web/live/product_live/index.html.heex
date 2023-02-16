@@ -1,0 +1,47 @@
+<.header>
+  Listing Products
+  <:actions>
+    <.link patch={~p"/sites/#{@site}/products/new"}>
+      <.button>New Product</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="products"
+  rows={@products}
+  row_click={&JS.navigate(~p"/sites/#{@site}/products/#{&1}")}
+>
+  <:col :let={product} label="Name"><%= product.name %></:col>
+  <:col :let={product} label="Description"><%= product.description %></:col>
+
+  <:action :let={product}>
+    <div class="sr-only">
+      <.link navigate={~p"/sites/#{@site}/products/#{product}"}>Show</.link>
+    </div>
+    <.link patch={~p"/sites/#{@site}/products/#{product}/edit"}>Edit</.link>
+  </:action>
+
+  <:action :let={product}>
+    <.link phx-click={JS.push("delete", value: %{id: product.id})} data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="product-modal"
+  show
+  on_cancel={JS.navigate(~p"/sites/#{@site}/products")}
+>
+  <.live_component
+    module={ExCommerceWeb.ProductLive.FormComponent}
+    id={@product.id || :new}
+    title={@page_title}
+    action={@live_action}
+    product={@product}
+    site={@site}
+    navigate={~p"/sites/#{@site}/products"}
+  />
+</.modal>
