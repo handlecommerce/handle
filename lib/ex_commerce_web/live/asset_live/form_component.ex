@@ -15,10 +15,10 @@ defmodule ExCommerceWeb.AssetLive.FormComponent do
         <:subtitle>Use this form to manage asset records in your database.</:subtitle>
       </.header>
 
-      <.simple_form :let={f} for={@changeset} id="asset-form" phx-target={@myself} phx-submit="save">
-        <MonacoEditor.editor field={{f, :content}} label="Contents" />
+      <.simple_form for={@form} id="asset-form" phx-target={@myself} phx-submit="save">
+        <MonacoEditor.editor field={@form[:content]} label="Contents" />
 
-        <.input field={{f, :key}} type="text" label="Filename" />
+        <.input field={@form[:key]} type="text" label="Filename" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Asset</.button>
         </:actions>
@@ -34,7 +34,7 @@ defmodule ExCommerceWeb.AssetLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)}
+     |> assign_form(changeset)}
   end
 
   @impl true
@@ -44,7 +44,7 @@ defmodule ExCommerceWeb.AssetLive.FormComponent do
       |> Resources.change_text_asset(asset_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    {:noreply, assign_form(socket, changeset)}
   end
 
   def handle_event("save", %{"asset" => asset_params}, socket) do
@@ -60,7 +60,7 @@ defmodule ExCommerceWeb.AssetLive.FormComponent do
          |> push_navigate(to: socket.assigns.navigate)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
+        {:noreply, assign_form(socket, changeset)}
     end
   end
 
@@ -73,7 +73,11 @@ defmodule ExCommerceWeb.AssetLive.FormComponent do
          |> push_navigate(to: socket.assigns.navigate)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+        {:noreply, assign_form(socket, changeset)}
     end
+  end
+
+  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+    assign(socket, :form, to_form(changeset))
   end
 end

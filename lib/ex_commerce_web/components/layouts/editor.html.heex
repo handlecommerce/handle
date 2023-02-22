@@ -12,15 +12,8 @@
     <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
     </script>
   </head>
-  <body class="bg-white antialiased min-h-screen flex flex-row">
-    <ExCommerceWeb.Sidebar.sidebar />
-    <main class="flex-grow" style="height: 200vh">
-      <ExCommerceWeb.Header.header />
-      <div class="flex">
-        <div class="flex-grow">
-          <%= @inner_content %>
-        </div>
-      </div>
-    </main>
+  <body class="bg-white antialiased">
+    <div></div>
+    <%= @inner_content %>
   </body>
 </html>

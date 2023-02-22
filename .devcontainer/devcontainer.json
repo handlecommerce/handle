@@ -1,6 +1,6 @@
 {
   "name": "Elixir 1.14",
-  "dockerComposeFile": "docker-compose.yml",
+  "dockerComposeFile": "../docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspace",
   "forwardPorts": [

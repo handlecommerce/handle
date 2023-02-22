@@ -13,15 +13,14 @@ defmodule ExCommerceWeb.SiteLive.FormComponent do
       </.header>
 
       <.simple_form
-        :let={f}
-        for={@changeset}
+        for={@form}
         id="site-form"
         phx-target={@myself}
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={{f, :name}} type="text" label="Name" />
-        <.input field={{f, :subdomain}} type="text" label="Subdomain" />
+        <.input field={@form[:name]} type="text" label="Name" />
+        <.input field={@form[:subdomain]} type="text" label="Subdomain" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Site</.button>
         </:actions>
@@ -37,7 +36,7 @@ defmodule ExCommerceWeb.SiteLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)}
+     |> assign_form(changeset)}
   end
 
   @impl true
@@ -47,7 +46,7 @@ defmodule ExCommerceWeb.SiteLive.FormComponent do
       |> Hosting.change_site(site_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    {:noreply, assign_form(socket, changeset)}
   end
 
   def handle_event("save", %{"site" => site_params}, socket) do
@@ -63,7 +62,7 @@ defmodule ExCommerceWeb.SiteLive.FormComponent do
          |> push_navigate(to: socket.assigns.navigate)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
+        {:noreply, assign_form(socket, changeset)}
     end
   end
 
@@ -78,5 +77,9 @@ defmodule ExCommerceWeb.SiteLive.FormComponent do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
+  end
+
+  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+    assign(socket, :form, to_form(changeset))
   end
 end

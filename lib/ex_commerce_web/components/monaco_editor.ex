@@ -3,18 +3,18 @@ defmodule ExCommerceWeb.MonacoEditor do
 
   import ExCommerceWeb.CoreComponents
 
-  attr :id, :any
+  attr :id, :any, default: nil
   attr :name, :any
   attr :label, :string, default: nil
 
   attr :field, :any, doc: "a %Phoenix.HTML.Form{}/field name tuple, for example: {f, :contents}"
 
   @spec editor(map) :: Phoenix.LiveView.Rendered.t()
-  def editor(%{field: {f, field}} = assigns) do
+  def editor(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns
-    |> assign_new(:name, fn -> Phoenix.HTML.Form.input_name(f, field) end)
-    |> assign_new(:id, fn -> Phoenix.HTML.Form.input_id(f, field) end)
-    |> assign_new(:value, fn -> Phoenix.HTML.Form.input_value(f, field) end)
+    |> assign_new(:name, fn -> field.name end)
+    |> assign(field: nil, id: assigns.id || field.id)
+    |> assign_new(:value, fn -> field.value end)
     |> do_editor()
   end
 

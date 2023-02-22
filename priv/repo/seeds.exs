@@ -10,4 +10,12 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-{:ok, site} = ExCommerce.Hosting.create_site(%{name: "Winestyr"})
+{:ok, site} = ExCommerce.Hosting.create_site(%{name: "Winestyr", subdomain: "winestyr"})
+
+{:ok, asset} =
+  ExCommerce.Resources.create_text_asset(site, %{
+    key: "index.html",
+    content: "<h1>Hello World</h1>"
+  })
+
+{:ok, route} = ExCommerce.Hosting.create_route(site, %{path: "/", asset_id: asset.id})

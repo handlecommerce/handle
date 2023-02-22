@@ -13,15 +13,14 @@ defmodule ExCommerceWeb.RouteLive.FormComponent do
       </.header>
 
       <.simple_form
-        :let={f}
-        for={@changeset}
+        for={@form}
         id="route-form"
         phx-target={@myself}
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={{f, :path}} type="text" label="Path" />
-        <.input field={{f, :asset_id}} type="select" options={@assets} label="Asset" />
+        <.input field={@form[:path]} type="text" label="Path" />
+        <.input field={@form[:asset_id]} type="select" options={@assets} label="Asset" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Site route</.button>
         </:actions>
@@ -40,7 +39,7 @@ defmodule ExCommerceWeb.RouteLive.FormComponent do
      socket
      |> assign(assigns)
      |> assign(:assets, assets)
-     |> assign(:changeset, changeset)}
+     |> assign_form(changeset)}
   end
 
   @impl true
@@ -50,7 +49,7 @@ defmodule ExCommerceWeb.RouteLive.FormComponent do
       |> Hosting.change_route(route_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    {:noreply, assign_form(socket, changeset)}
   end
 
   def handle_event("save", %{"route" => route_params}, socket) do
@@ -66,7 +65,7 @@ defmodule ExCommerceWeb.RouteLive.FormComponent do
          |> push_navigate(to: socket.assigns.navigate)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
+        {:noreply, assign_form(socket, changeset)}
     end
   end
 
@@ -79,7 +78,11 @@ defmodule ExCommerceWeb.RouteLive.FormComponent do
          |> push_navigate(to: socket.assigns.navigate)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+        {:noreply, assign_form(socket, changeset)}
     end
+  end
+
+  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+    assign(socket, :form, to_form(changeset))
   end
 end

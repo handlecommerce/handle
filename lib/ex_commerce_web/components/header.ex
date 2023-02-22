@@ -5,13 +5,7 @@ defmodule ExCommerceWeb.Header do
     ~H"""
     <header class="px-4 sm:px-6 lg:px-8 bg-gray-800">
       <div class="flex items-center justify-between py-3">
-        <!--- Logo --->
-        <div class="flex items-center gap-4 text-red-100">
-          <a href="/" class="px-2 text-xl font-semibold leading-6 text-brand">
-            ExCommerce
-          </a>
-        </div>
-
+        <span></span>
         <div class="flex items-center gap-4">
           <%= if assigns[:current_user] do %>
             <.header_link href={~p"/users/settings"}><%= @current_user.email %></.header_link>

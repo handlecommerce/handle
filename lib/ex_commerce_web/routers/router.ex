@@ -46,6 +46,10 @@ defmodule ExCommerceWeb.Routers.Standard do
       live "/products/:id/edit", ProductLive.Index, :edit
       live "/products/:id", ProductLive.Show, :show
       live "/products/:id/show/edit", ProductLive.Show, :edit
+
+      live_session :editor, root_layout: {ExCommerceWeb.Layouts, :editor} do
+        live "/editor", EditorLive.Index, :index
+      end
     end
   end
 
