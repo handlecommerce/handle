@@ -1,10 +1,11 @@
 defmodule ExCommerce.Editor.FileTreeNode do
-  @enforce_keys [:type, :name]
-  defstruct [:type, :name, :expanded, :children]
+  @enforce_keys [:id, :type, :name]
+  defstruct [:id, :type, :name, :expanded, :children]
 
   alias ExCommerce.Resources.Asset
 
   @type t :: %__MODULE__{
+          id: integer,
           type: :directory | :file,
           name: String.t(),
           expanded: boolean() | nil,
@@ -22,6 +23,7 @@ defmodule ExCommerce.Editor.FileTreeNode do
 
   def new([filename | []], acc) do
     record = %__MODULE__{
+      id: unique_id(),
       type: :file,
       name: filename
     }
@@ -37,6 +39,7 @@ defmodule ExCommerce.Editor.FileTreeNode do
       nil ->
         [
           %__MODULE__{
+            id: unique_id(),
             type: :directory,
             name: directory_name,
             expanded: false,
@@ -51,4 +54,6 @@ defmodule ExCommerce.Editor.FileTreeNode do
         end)
     end
   end
+
+  defp unique_id, do: to_string(System.unique_integer())
 end
