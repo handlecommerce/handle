@@ -58,6 +58,15 @@ defmodule ExCommerceWeb do
     end
   end
 
+  def live_editor do
+    quote do
+      use Phoenix.LiveView,
+        layout: {ExCommerceWeb.Layouts, :editor}
+
+      unquote(html_helpers())
+    end
+  end
+
   def live_component do
     quote do
       use Phoenix.LiveComponent

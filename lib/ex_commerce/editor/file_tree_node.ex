@@ -1,59 +1,62 @@
 defmodule ExCommerce.Editor.FileTreeNode do
   @enforce_keys [:id, :type, :name]
-  defstruct [:id, :type, :name, :expanded, :children]
+  defstruct [:id, :type, :name, :key, :expanded, :children]
 
   alias ExCommerce.Resources.Asset
 
   @type t :: %__MODULE__{
-          id: integer,
+          id: String.t(),
           type: :directory | :file,
           name: String.t(),
+          key: String.t() | nil,
           expanded: boolean() | nil,
           children: list(t) | nil
         }
 
-  def new(path, acc \\ [])
-
-  def new(%Asset{key: key}, acc) do
+  def new(%Asset{id: id, key: key}, acc) do
     key
     |> String.split("/")
     |> Enum.reject(&(&1 == ""))
-    |> new(acc)
+    |> create_node(id, acc)
   end
 
-  def new([filename | []], acc) do
+  defp create_node(path, asset_id, acc \\ [])
+
+  defp create_node([filename | []], asset_id, acc) do
+    # Found a filename. Create a file node
     record = %__MODULE__{
-      id: unique_id(),
+      id: to_string(asset_id),
       type: :file,
       name: filename
     }
 
     case Enum.find_index(acc, &(&1.name == filename)) do
-      nil -> [record | acc] |> Enum.sort_by(& &1.name)
+      nil -> Enum.sort_by([record | acc], & &1.name)
       i -> List.update_at(acc, i, fn _old -> record end)
     end
   end
 
-  def new([directory_name | children], acc) do
+  defp create_node([directory_name | children], asset_id, acc) do
+    # Found a directory. Create a directory node
     case Enum.find_index(acc, &(&1.name == directory_name)) do
       nil ->
+        # Create a new directory since this one wasn't found
         [
           %__MODULE__{
-            id: unique_id(),
+            id: Ecto.UUID.generate(),
             type: :directory,
             name: directory_name,
             expanded: false,
-            children: new(children)
+            children: create_node(children, asset_id)
           }
           | acc
         ]
 
       i ->
+        # This directory exists. Append the node as a child to it
         List.update_at(acc, i, fn record ->
-          %{record | children: new(children, record.children)}
+          %{record | children: create_node(children, asset_id, record.children)}
         end)
     end
   end
-
-  defp unique_id, do: to_string(System.unique_integer())
 end

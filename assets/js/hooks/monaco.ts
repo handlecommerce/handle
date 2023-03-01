@@ -25,13 +25,16 @@ self.MonacoEnvironment = {
 
 interface IMonacoEditor extends ILiveViewHook {
   save(): void | Promise<void>;
-  syncElement: HTMLInputElement;
   editor: monaco.editor.IStandaloneCodeEditor;
 }
 
 const MonacoEditor = {
   mounted(this: IMonacoEditor) {
-    this.syncElement = document.getElementById(this.el.dataset['editorField']!) as HTMLInputElement;
+
+    this.handleEvent("load-contents", ({ contents }) => {
+      console.log("HERE")
+      this.editor.setValue(contents);
+    });
 
     this.editor = monaco.editor.create(this.el, {
       language: 'html',
@@ -52,9 +55,6 @@ const MonacoEditor = {
       run: () => this.save()
     });
 
-    this.editor.getModel()?.onDidChangeContent(() => {
-      this.syncElement.value = this.editor.getValue();
-    });
     window.addEventListener("resize", () => this.editor.layout());
   },
 

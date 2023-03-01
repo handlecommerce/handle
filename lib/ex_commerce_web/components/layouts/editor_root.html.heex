@@ -12,12 +12,7 @@
     <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
     </script>
   </head>
-  <body class="bg-white antialiased min-h-screen flex flex-row">
-    <ExCommerceWeb.Sidebar.sidebar />
-
-    <main class="flex-grow">
-      <ExCommerceWeb.Header.header />
-      <%= @inner_content %>
-    </main>
+  <body class="bg-white antialiased min-h-screen">
+    <%= @inner_content %>
   </body>
 </html>

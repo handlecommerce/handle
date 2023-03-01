@@ -14,11 +14,13 @@ defmodule ExCommerceWeb.EditorLive.FileExplorer do
 
   def render(assigns) do
     ~H"""
-    <ul>
-      <%= for node <- @tree do %>
-        <.render_node node={node} myself={@myself} />
-      <% end %>
-    </ul>
+    <aside class="w-64 sticky bg-gray-800 shadow flex-col justify-between flex h-screen top-0 text-gray-400 py-4 px-2">
+      <ul>
+        <%= for node <- @tree do %>
+          <.tree_node node={node} myself={@myself} />
+        <% end %>
+      </ul>
+    </aside>
     """
   end
 
@@ -31,38 +33,42 @@ defmodule ExCommerceWeb.EditorLive.FileExplorer do
   attr :myself, :any, required: true
 
   # Render a file node
-  defp render_node(%{node: %{type: :file}} = assigns) do
+  defp tree_node(%{node: %{type: :file}} = assigns) do
     # Clicking on this node will cause a new tab to be opened
 
     ~H"""
     <li class="my-2">
-      <span class="flex leading-5">
+      <span
+        class="flex leading-5 hover:text-gray-200 hover:cursor-pointer"
+        phx-click="load-file"
+        phx-value-id={@node.id}
+      >
         <Heroicons.document class="h-4 w-4 mr-1" /> <%= @node.name %>
       </span>
     </li>
     """
   end
 
-  defp render_node(%{node: node} = assigns) do
+  defp tree_node(%{node: node} = assigns) do
     # Clicking on this node will cause the collapse or expansion of the node
     assigns = assign(assigns, :rotation, if(node.expanded, do: "rotate-90", else: ""))
 
     ~H"""
     <li class="my-2">
       <span
-        class="flex leading-4"
+        class="flex leading-4 hover:text-gray-200 hover:cursor-pointer"
         phx-click="toggle-expansion"
         phx-target={@myself}
         phx-value-node-id={@node.id}
       >
-        <Heroicons.chevron_right class="h-4 w-4 mr-1 {@rotation}" />
+        <Heroicons.chevron_right class={["h-4 w-4 mr-1 transition-all", @rotation]} />
         <%= @node.name %>
       </span>
 
       <%= if @node.expanded do %>
         <ul class="pl-4">
           <%= for child <- @node.children do %>
-            <.render_node node={child} myself={@myself} />
+            <.tree_node node={child} myself={@myself} />
           <% end %>
         </ul>
       <% end %>
