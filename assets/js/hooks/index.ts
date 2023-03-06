@@ -1,3 +1,3 @@
-import { MonacoEditor } from './monaco';
+import MonacoEditor from './monaco';
 
 export default { MonacoEditor };

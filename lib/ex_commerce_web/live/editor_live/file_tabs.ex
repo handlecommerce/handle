@@ -1,46 +1,41 @@
 defmodule ExCommerceWeb.EditorLive.FileTabs do
   use Phoenix.Component
 
-  alias ExCommerce.Editor.OpenAsset
+  alias ExCommerce.Editor.Buffer
 
-  attr :assets, :any, required: true
+  attr(:buffers, :any, required: true)
+  attr(:focused_buffer, :any, required: true)
 
   def tabs(assigns) do
     ~H"""
-    <ul class="flex flex-wrap border-b border-gray-200">
-      <%= for asset <- @assets do %>
-        <.tab asset={asset} />
+    <span class="flex flex-wrap border-b border-gray-200">
+      <%= for buffer <- @buffers do %>
+        <.tab buffer={buffer} active={buffer == @focused_buffer} />
       <% end %>
-    </ul>
+    </span>
     """
   end
 
-  attr :asset, :any, required: true
-  attr :active, :boolean, default: false
-  attr :disabled, :boolean, default: false
+  attr(:buffer, :any, required: true)
+  attr(:active, :boolean, default: false)
 
-  defp tab(%{active: active} = assigns) do
-    classes =
-      if active,
-        do: ["bg-gray-100 text-blue-600 border-b-gray-200"],
-        else: [
-          "text-gray-500 hover:text-gray-600 hover:bg-gray-50 border-b-white hover:border-b-gray-200"
-        ]
-
-    assigns = assign(assigns, :classes, classes)
-
+  defp tab(assigns) do
     ~H"""
-    <li>
-      <a
-        href="#"
-        class={[
-          "rounded-t-md py-1 pl-4 pr-2 text-sm font-medium text-center border-b-2 flex" | @classes
-        ]}
-      >
-        <%= OpenAsset.title(@asset) %>
-        <.close_icon asset_id={@asset.asset.id} />
-      </a>
-    </li>
+    <label class="select-none text-sm font-medium text-center">
+      <input
+        type="radio"
+        name="file-tabs"
+        class="hidden peer"
+        checked={@active}
+        phx-click="focus-buffer"
+        phx-value-id={@buffer.id}
+      />
+      <span
+        class="rounded-t-md py-1 pl-4 pr-2 border-b-2 flex cursor-pointer peer-checked:bg-gray-100 peer-checked:text-blue-600 peer-checked:border-b-gray-200">
+        <%= Buffer.title(@buffer) %>
+        <.close_icon buffer_id={@buffer.id} />
+      </span>
+    </label>
     """
   end
 
@@ -51,7 +46,7 @@ defmodule ExCommerceWeb.EditorLive.FileTabs do
         "h-3 w-3 ml-3 mt-1.5 hover:bg-gray-200 rounded-sm hover:text-cyan-800 text-center"
       ]}
       phx-click="close-file"
-      phx-value-id={@asset_id}
+      phx-value-id={@buffer_id}
     />
     """
   end

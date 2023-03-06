@@ -25,8 +25,9 @@ defmodule ExCommerceWeb.EditorLive.FileExplorer do
   end
 
   def handle_event("toggle-expansion", %{"node-id" => node_id}, socket) do
-    socket = assign(socket, :tree, toggle_node(socket.assigns.tree, node_id))
-    {:noreply, socket}
+    {:noreply,
+     socket
+     |> assign(:tree, toggle_node(socket.assigns.tree, node_id))}
   end
 
   attr :node, :any, required: true

@@ -1,4 +1,4 @@
-defmodule ExCommerce.Editor.OpenAsset do
+defmodule ExCommerce.Editor.Buffer do
   defstruct [:id, :asset, :content]
 
   alias ExCommerce.Resources.Asset
@@ -12,7 +12,7 @@ defmodule ExCommerce.Editor.OpenAsset do
   @spec new(Asset.t()) :: t()
   def new(%Asset{} = asset) do
     %__MODULE__{
-      id: asset.id |> to_string(),
+      id: to_string(asset.id),
       asset: asset,
       content: asset.content
     }

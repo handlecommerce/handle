@@ -4,6 +4,7 @@
     "@types/phoenix_live_view": "^0.15.1"
   },
   "dependencies": {
-    "monaco-editor": "^0.35.0"
+    "monaco-editor": "^0.35.0",
+    "phoenix_typed_hook": "^0.18.2"
   }
 }
