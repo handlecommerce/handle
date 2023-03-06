@@ -33,7 +33,7 @@ defmodule ExCommerce.MixProject do
   defp deps do
     [
       {:bcrypt_elixir, "~> 3.0"},
-      {:phoenix, "~> 1.7.0-rc.3", override: true},
+      {:phoenix, "~> 1.7.0", override: true},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.6"},
       {:postgrex, ">= 0.0.0"},
