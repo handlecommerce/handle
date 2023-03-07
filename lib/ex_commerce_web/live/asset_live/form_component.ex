@@ -16,7 +16,7 @@ defmodule ExCommerceWeb.AssetLive.FormComponent do
       </.header>
 
       <.simple_form for={@form} id="asset-form" phx-target={@myself} phx-submit="save">
-        <MonacoEditor.editor field={@form[:content]} label="Contents" />
+        <MonacoEditor.editor field={@form[:content]} label="Content" />
 
         <.input field={@form[:key]} type="text" label="Filename" />
         <:actions>

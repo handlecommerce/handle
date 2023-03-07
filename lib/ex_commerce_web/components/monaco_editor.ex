@@ -7,7 +7,7 @@ defmodule ExCommerceWeb.MonacoEditor do
   attr :name, :any
   attr :label, :string, default: nil
 
-  attr :field, :any, doc: "a %Phoenix.HTML.Form{}/field name tuple, for example: {f, :contents}"
+  attr :field, :any, doc: "a %Phoenix.HTML.Form{}/field name tuple, for example: {f, :content}"
 
   @spec editor(map) :: Phoenix.LiveView.Rendered.t()
   def editor(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do

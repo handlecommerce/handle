@@ -46,7 +46,7 @@ class MonacoEditor extends Hook {
     this.buffers = new Map();
 
     // Bind all the events pushed from the server
-    this.handleEvent("load-buffer", ({ id, contents, language }) => this.loadBuffer(id, contents, language));
+    this.handleEvent("load-buffer", ({ id, content, language }) => this.loadBuffer(id, content, language));
     this.handleEvent("focus-buffer", ({ id }) => this.focusBuffer(id));
     this.handleEvent("close-buffer", ({ id }) => this.closeBuffer(id));
 
@@ -72,11 +72,11 @@ class MonacoEditor extends Hook {
   }
 
   /**
-   * Save the contents of the current buffer
+   * Save the content of the current buffer
    */
   private save() {
-    const contents = this.editor.getValue();
-    this.pushEvent("save-buffer", { id: this.focusedBufferId, contents })
+    const content = this.editor.getValue();
+    this.pushEvent("save-buffer", { id: this.focusedBufferId, content })
   }
 
   /**
@@ -89,16 +89,16 @@ class MonacoEditor extends Hook {
     }
   }
 
-  private loadBuffer(id: string, contents: string, language: string) {
+  private loadBuffer(id: string, content: string, language: string) {
     this.storeCurrentState();
 
-    const model = monaco.editor.createModel(contents, language);
-
-    this.focusedBufferId = id;
-    this.editor.setModel(model);
-    this.editor.focus();
-
+    const model = monaco.editor.createModel(content, language);
     this.buffers.set(id, { model, viewState: null });
+
+    this.focusBuffer(id);
+    this.focusBuffer(id);
+    this.focusBuffer(id);
+    this.focusBuffer(id);
   }
 
   /**

@@ -24,8 +24,7 @@ defmodule ExCommerceWeb.EditorLive.Index do
       <.live_component module={FileExplorer} id="file-explorer" site={@site} />
       <div class="flex flex-col flex-grow">
         <FileTabs.tabs buffers={@buffers} focused_buffer={@focused_buffer} />
-
-        <%= unless is_nil(@focused_buffer) do %>
+        <%= if @focused_buffer do %>
           <BufferEditor.editor />
         <% end %>
       </div>
@@ -57,10 +56,10 @@ defmodule ExCommerceWeb.EditorLive.Index do
     {:noreply, focus_buffer(socket, index - 1)}
   end
 
-  def handle_event("save-buffer", %{"id" => id, "contents" => contents}, socket) do
+  def handle_event("save-buffer", %{"id" => id, "content" => content}, socket) do
     socket.assigns.site
     |> Resources.get_asset!(id)
-    |> Resources.update_text_asset(%{content: contents})
+    |> Resources.update_text_asset(%{content: content})
     |> IO.inspect()
 
     {:noreply, socket}
@@ -68,6 +67,7 @@ defmodule ExCommerceWeb.EditorLive.Index do
 
   defp focus_buffer(socket, id) when is_binary(id) do
     case Enum.find(socket.assigns.buffers, &(&1.id == id)) do
+      # Buffer not found. This is an error state
       nil ->
         socket
 
@@ -81,7 +81,7 @@ defmodule ExCommerceWeb.EditorLive.Index do
   defp focus_buffer(socket, index) when is_integer(index) do
     case Enum.at(socket.assigns.buffers, index, List.first(socket.assigns.buffers)) do
       nil ->
-        socket
+        assign(socket, :focused_buffer, nil)
 
       buffer ->
         socket
@@ -91,16 +91,14 @@ defmodule ExCommerceWeb.EditorLive.Index do
   end
 
   defp load_new_buffer(socket, id) do
-    buffer =
-      socket.assigns.site
-      |> Resources.get_asset!(id)
-      |> Buffer.new()
+    asset = Resources.get_asset!(socket.assigns.site, id)
+    buffer = Buffer.new(asset)
 
     loaded_buffers = [buffer | Enum.reverse(socket.assigns.buffers)] |> Enum.reverse()
 
     socket
     |> assign(:focused_buffer, buffer)
     |> assign(:buffers, loaded_buffers)
-    |> push_event("load-buffer", %{id: id, contents: buffer.content, language: "html"})
+    |> push_event("load-buffer", %{id: id, content: asset.content, language: "html"})
   end
 end

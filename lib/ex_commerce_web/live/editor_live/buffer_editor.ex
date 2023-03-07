@@ -1,11 +1,11 @@
 defmodule ExCommerceWeb.EditorLive.BufferEditor do
   use Phoenix.Component
 
-  alias ExCommerce.Editor.Buffer
-
   def editor(assigns) do
     ~H"""
-    <div id="editor-1" phx-hook="MonacoEditor" class="w-full flex-grow" phx-update="ignore"></div>
+    <div phx-update="ignore" id="monaco-editor-wrapper" class="flex flex-grow">
+      <div id="monaco-editor" phx-hook="MonacoEditor" class="w-full flex-grow"></div>
+    </div>
     """
   end
 end
