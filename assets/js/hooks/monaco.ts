@@ -1,6 +1,10 @@
 import * as monaco from 'monaco-editor';
 import { Hook, makeHook } from "phoenix_typed_hook";
 
+import { debounce } from '../utils/debounce';
+
+type IModelContentChangedEvent = monaco.editor.IModelContentChangedEvent;
+
 // Since packaging is done by you, you need
 // to instruct the editor how you named the
 // bundles that contain the web workers.
@@ -22,6 +26,8 @@ window.MonacoEnvironment = {
     return "/assets/node_modules/monaco-editor/esm/vs/editor/editor.worker.js"
   }
 };
+
+
 
 interface IBufferState {
   model: monaco.editor.IModel;
@@ -49,6 +55,13 @@ class MonacoEditor extends Hook {
     this.handleEvent("load-buffer", ({ id, content, language }) => this.loadBuffer(id, content, language));
     this.handleEvent("focus-buffer", ({ id }) => this.focusBuffer(id));
     this.handleEvent("close-buffer", ({ id }) => this.closeBuffer(id));
+    this.handleEvent("display-preview", ({ content }) => {
+      const previewElement = document.getElementById("live-preview");
+
+      if (previewElement) {
+        previewElement.innerHTML = content;
+      }
+    })
 
     // Create the default editor
     this.editor = monaco.editor.create(this.el, {
@@ -56,6 +69,12 @@ class MonacoEditor extends Hook {
       scrollBeyondLastLine: false,
       automaticLayout: true
     });
+
+
+    this.editor.onDidChangeModelContent(debounce((e: IModelContentChangedEvent) => {
+      const content = this.editor.getModel()?.getValue();
+      this.pushEvent("generate-preview", { content })
+    }));
 
     // Add a save action with CMD/CTRL-S
     this.editor.addAction({

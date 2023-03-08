@@ -14,7 +14,8 @@ defmodule ExCommerceWeb.EditorLive.Index do
      socket
      |> assign(:site, site)
      |> assign(:buffers, [])
-     |> assign(:focused_buffer, nil)}
+     |> assign(:focused_buffer, nil)
+     |> assign(:live_preview_content, nil)}
   end
 
   @impl true
@@ -63,6 +64,15 @@ defmodule ExCommerceWeb.EditorLive.Index do
     |> IO.inspect()
 
     {:noreply, socket}
+  end
+
+  def handle_event("generate-preview", %{"content" => content}, socket) do
+    with {:ok, document} <- Liquex.parse(content),
+         {result, _} <- Liquex.render(document, %{}) do
+      {:noreply, socket |> push_event("display-preview", %{content: result})}
+    else
+      _ -> {:noreply, socket}
+    end
   end
 
   defp focus_buffer(socket, id) when is_binary(id) do
