@@ -1,5 +1,5 @@
 defmodule ExCommerce.Editor.Buffer do
-  defstruct [:id, :asset, :content]
+  defstruct [:id, :asset]
 
   alias ExCommerce.Resources.Asset
 
