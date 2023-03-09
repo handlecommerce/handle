@@ -1,5 +1,6 @@
 import * as monaco from 'monaco-editor';
 import { Hook, makeHook } from "phoenix_typed_hook";
+import { LivePreview } from '../components/live-preview';
 
 import { debounce } from '../utils/debounce';
 
@@ -26,8 +27,6 @@ window.MonacoEnvironment = {
     return "/assets/node_modules/monaco-editor/esm/vs/editor/editor.worker.js"
   }
 };
-
-
 
 interface IBufferState {
   model: monaco.editor.IModel;
@@ -56,20 +55,19 @@ class MonacoEditor extends Hook {
     this.handleEvent("focus-buffer", ({ id }) => this.focusBuffer(id));
     this.handleEvent("close-buffer", ({ id }) => this.closeBuffer(id));
     this.handleEvent("display-preview", ({ content }) => {
-      const previewElement = document.getElementById("live-preview");
+      const previewElement = document.getElementsByTagName("live-preview")[0] as LivePreview | undefined;
 
       if (previewElement) {
-        previewElement.innerHTML = content;
+        previewElement.content = content;
       }
     })
 
     // Create the default editor
     this.editor = monaco.editor.create(this.el, {
-      language: 'html',
+      language: "html",
       scrollBeyondLastLine: false,
       automaticLayout: true
     });
-
 
     this.editor.onDidChangeModelContent(debounce((e: IModelContentChangedEvent) => {
       const content = this.editor.getModel()?.getValue();
@@ -115,9 +113,6 @@ class MonacoEditor extends Hook {
     this.buffers.set(id, { model, viewState: null });
 
     this.focusBuffer(id);
-    this.focusBuffer(id);
-    this.focusBuffer(id);
-    this.focusBuffer(id);
   }
 
   /**
@@ -135,6 +130,8 @@ class MonacoEditor extends Hook {
       this.editor.setModel(bufferState.model);
       this.editor.restoreViewState(bufferState.viewState);
       this.editor.focus();
+
+      this.pushEvent("generate-preview", { content: bufferState.model?.getValue() })
     }
   }
 
@@ -148,4 +145,4 @@ class MonacoEditor extends Hook {
   }
 }
 
-export default makeHook(MonacoEditor)
+export default makeHook(MonacoEditor);

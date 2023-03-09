@@ -5,7 +5,7 @@ defmodule ExCommerceWeb.EditorLive.BufferEditor do
     ~H"""
     <div phx-update="ignore" id="monaco-editor-wrapper" class="flex flex-grow flex-row">
       <div id="monaco-editor" phx-hook="MonacoEditor" class="w-full flex-1"></div>
-      <div class="flex-1" id="live-preview">Live Preview</div>
+      <live-preview class="flex-1">Some Content</live-preview>
     </div>
     """
   end
