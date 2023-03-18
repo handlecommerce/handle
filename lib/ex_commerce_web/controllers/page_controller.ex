@@ -20,7 +20,7 @@ defmodule ExCommerceWeb.PageController do
         {content, _} =
           asset.content
           |> Liquex.parse!()
-          |> Liquex.render(%{params: params})
+          |> Liquex.render!(%{params: params})
 
         html(conn, content)
 
