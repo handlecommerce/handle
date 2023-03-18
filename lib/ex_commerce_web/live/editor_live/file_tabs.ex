@@ -30,8 +30,7 @@ defmodule ExCommerceWeb.EditorLive.FileTabs do
         phx-click="focus-buffer"
         phx-value-id={@buffer.id}
       />
-      <span
-        class="rounded-t-md py-1 pl-4 pr-2 border-b-2 flex cursor-pointer peer-checked:bg-gray-100 peer-checked:text-blue-600 peer-checked:border-b-gray-200">
+      <span class="rounded-t-md py-1 pl-4 pr-2 border-b-2 flex cursor-pointer peer-checked:bg-gray-200 peer-checked:text-blue-800 peer-checked:border-b-gray-200">
         <%= Buffer.title(@buffer) %>
         <.close_icon buffer_id={@buffer.id} />
       </span>

@@ -26,7 +26,7 @@ defmodule ExCommerceWeb.EditorLive.Index do
       <div class="flex flex-col flex-grow">
         <FileTabs.tabs buffers={@buffers} focused_buffer={@focused_buffer} />
         <%= if @focused_buffer do %>
-          <BufferEditor.editor />
+          <.live_component module={BufferEditor} id="buffer-editor" content={@live_preview_content} />
         <% end %>
       </div>
     </div>
@@ -61,18 +61,8 @@ defmodule ExCommerceWeb.EditorLive.Index do
     socket.assigns.site
     |> Resources.get_asset!(id)
     |> Resources.update_text_asset(%{content: content})
-    |> IO.inspect()
 
     {:noreply, socket}
-  end
-
-  def handle_event("generate-preview", %{"content" => content}, socket) do
-    with {:ok, document} <- Liquex.parse(content),
-         {result, _} <- Liquex.render(document, %{}) do
-      {:noreply, socket |> push_event("display-preview", %{content: result})}
-    else
-      _ -> {:noreply, socket}
-    end
   end
 
   defp focus_buffer(socket, id) when is_binary(id) do
@@ -109,6 +99,7 @@ defmodule ExCommerceWeb.EditorLive.Index do
     socket
     |> assign(:focused_buffer, buffer)
     |> assign(:buffers, loaded_buffers)
+    |> assign(:live_preview_content, asset.content)
     |> push_event("load-buffer", %{id: id, content: asset.content, language: "html"})
   end
 end

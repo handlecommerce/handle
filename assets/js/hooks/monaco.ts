@@ -1,10 +1,7 @@
 import * as monaco from 'monaco-editor';
 import { Hook, makeHook } from "phoenix_typed_hook";
-import { LivePreview } from '../components/live-preview';
 
 import { debounce } from '../utils/debounce';
-
-type IModelContentChangedEvent = monaco.editor.IModelContentChangedEvent;
 
 // Since packaging is done by you, you need
 // to instruct the editor how you named the
@@ -33,6 +30,7 @@ interface IBufferState {
   viewState: monaco.editor.ICodeEditorViewState | null;
 }
 
+
 class MonacoEditor extends Hook {
   private editor: monaco.editor.IStandaloneCodeEditor;
   private focusedBufferId?: string;
@@ -54,25 +52,46 @@ class MonacoEditor extends Hook {
     this.handleEvent("load-buffer", ({ id, content, language }) => this.loadBuffer(id, content, language));
     this.handleEvent("focus-buffer", ({ id }) => this.focusBuffer(id));
     this.handleEvent("close-buffer", ({ id }) => this.closeBuffer(id));
-    this.handleEvent("display-preview", ({ content }) => {
-      const previewElement = document.getElementsByTagName("live-preview")[0] as LivePreview | undefined;
-
-      if (previewElement) {
-        previewElement.content = content;
-      }
-    })
+    this.handleEvent("highlight", ({ line, message }) => this.highlightLine(line, message));
+    this.handleEvent("clear-highlight", () => this.clearHighlight());
 
     // Create the default editor
+    this.initializeEditor();
+  }
+
+  clearHighlight() {
+    monaco.editor.removeAllMarkers("owner");
+  }
+
+  private highlightLine(line: number, message: string): void {
+    const model = this.editor.getModel();
+
+    if (model && model.getLineCount() >= line) {
+
+      const markerData: monaco.editor.IMarkerData = {
+        startLineNumber: line,
+        endLineNumber: line,
+        startColumn: model.getLineFirstNonWhitespaceColumn(line) || 0,
+        endColumn: model.getLineLastNonWhitespaceColumn(line) || 0,
+        message,
+        severity: monaco.MarkerSeverity.Error
+      };
+
+      monaco.editor.setModelMarkers(model, "owner", [markerData]);
+    }
+  }
+
+  private initializeEditor() {
     this.editor = monaco.editor.create(this.el, {
       language: "html",
       scrollBeyondLastLine: false,
-      automaticLayout: true
+      automaticLayout: true,
+      minimap: { enabled: false },
+      autoIndent: "advanced"
     });
 
-    this.editor.onDidChangeModelContent(debounce((e: IModelContentChangedEvent) => {
-      const content = this.editor.getModel()?.getValue();
-      this.pushEvent("generate-preview", { content })
-    }));
+    // Whenever the content changes, generate a new preview.
+    this.editor.onDidChangeModelContent(debounce(() => this.updatePreview()));
 
     // Add a save action with CMD/CTRL-S
     this.editor.addAction({
@@ -88,12 +107,20 @@ class MonacoEditor extends Hook {
     window.addEventListener("resize", () => this.editor.layout());
   }
 
+  private updatePreview() {
+    this.pushEventTo(this.el, "generate-preview", {
+      content: this.editor.getModel()?.getValue()
+    });
+  }
+
   /**
    * Save the content of the current buffer
    */
   private save() {
-    const content = this.editor.getValue();
-    this.pushEvent("save-buffer", { id: this.focusedBufferId, content })
+    this.pushEvent("save-buffer", {
+      id: this.focusedBufferId,
+      content: this.editor.getValue()
+    })
   }
 
   /**
@@ -109,8 +136,10 @@ class MonacoEditor extends Hook {
   private loadBuffer(id: string, content: string, language: string) {
     this.storeCurrentState();
 
-    const model = monaco.editor.createModel(content, language);
-    this.buffers.set(id, { model, viewState: null });
+    this.buffers.set(id, {
+      model: monaco.editor.createModel(content, language),
+      viewState: null
+    });
 
     this.focusBuffer(id);
   }
@@ -131,7 +160,7 @@ class MonacoEditor extends Hook {
       this.editor.restoreViewState(bufferState.viewState);
       this.editor.focus();
 
-      this.pushEvent("generate-preview", { content: bufferState.model?.getValue() })
+      this.updatePreview();
     }
   }
 

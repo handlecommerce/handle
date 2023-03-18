@@ -1,3 +1,4 @@
 import MonacoEditor from './monaco';
+import DraggableGutter from "./draggable-gutter";
 
-export default { MonacoEditor };
+export default { MonacoEditor, DraggableGutter };

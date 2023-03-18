@@ -2,7 +2,7 @@
  * Debounce a function
  *
  * @param fn Funtion to call when not debouncing
- * @param milliseconds time in milliseconds to wait after call
+ * @param timeout time in milliseconds to wait after call (300ms default)
  * @returns debounced function
  */
 function debounce(fn: Function, timeout = 300) {
