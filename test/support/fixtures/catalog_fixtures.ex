@@ -1,7 +1,7 @@
-defmodule ExCommerce.CatalogFixtures do
+defmodule HandleCommerce.CatalogFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `ExCommerce.Catalog` context.
+  entities via the `HandleCommerce.Catalog` context.
   """
 
   @doc """
@@ -15,7 +15,7 @@ defmodule ExCommerce.CatalogFixtures do
         description: "some description",
         name: "some name"
       })
-      |> ExCommerce.Catalog.create_product()
+      |> HandleCommerce.Catalog.create_product()
 
     product
   end

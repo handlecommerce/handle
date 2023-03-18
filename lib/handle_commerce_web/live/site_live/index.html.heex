@@ -1,0 +1,40 @@
+<.header>
+  Listing Sites
+  <:actions>
+    <.link patch={~p"/sites/new"}>
+      <.button>New Site</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="sites" rows={@sites} row_click={&JS.navigate(~p"/sites/#{&1}")}>
+  <:col :let={site} label="Name"><%= site.name %></:col>
+  <:col :let={site} label="Subdomain"><%= site.subdomain %></:col>
+  <:action :let={site}>
+    <div class="sr-only">
+      <.link navigate={~p"/sites/#{site}"}>Show</.link>
+    </div>
+    <.link patch={~p"/sites/#{site}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={site}>
+    <.link phx-click={JS.push("delete", value: %{id: site.id})} data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="site-modal"
+  show
+  on_cancel={JS.navigate(~p"/sites")}
+>
+  <.live_component
+    module={HandleCommerceWeb.SiteLive.FormComponent}
+    id={@site.id || :new}
+    title={@page_title}
+    action={@live_action}
+    site={@site}
+    navigate={~p"/sites"}
+  />
+</.modal>

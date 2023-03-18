@@ -1,4 +1,4 @@
-defmodule ExCommerce.Repo.Migrations.CreateUsersAuthTables do
+defmodule HandleCommerce.Repo.Migrations.CreateUsersAuthTables do
   use Ecto.Migration
 
   def change do

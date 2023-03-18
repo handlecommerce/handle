@@ -1,9 +1,9 @@
-defmodule ExCommerce.MixProject do
+defmodule HandleCommerce.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :ex_commerce,
+      app: :handle_commerce,
       version: "0.1.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -18,7 +18,7 @@ defmodule ExCommerce.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {ExCommerce.Application, []},
+      mod: {HandleCommerce.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
