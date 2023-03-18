@@ -1,7 +1,7 @@
-defmodule ExCommerce.AccountsFixtures do
+defmodule HandleCommerce.AccountsFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `ExCommerce.Accounts` context.
+  entities via the `HandleCommerce.Accounts` context.
   """
 
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
@@ -18,7 +18,7 @@ defmodule ExCommerce.AccountsFixtures do
     {:ok, user} =
       attrs
       |> valid_user_attributes()
-      |> ExCommerce.Accounts.register_user()
+      |> HandleCommerce.Accounts.register_user()
 
     user
   end

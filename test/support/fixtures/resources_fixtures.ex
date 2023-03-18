@@ -1,7 +1,7 @@
-defmodule ExCommerce.ResourcesFixtures do
+defmodule HandleCommerce.ResourcesFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `ExCommerce.Resources` context.
+  entities via the `HandleCommerce.Resources` context.
   """
 
   @doc """
@@ -16,7 +16,7 @@ defmodule ExCommerce.ResourcesFixtures do
         file_path: "some file_path",
         filename: "some filename"
       })
-      |> ExCommerce.Resources.create_text_asset()
+      |> HandleCommerce.Resources.create_text_asset()
 
     asset
   end

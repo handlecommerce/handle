@@ -7,17 +7,17 @@
 # General application configuration
 import Config
 
-config :ex_commerce,
-  ecto_repos: [ExCommerce.Repo]
+config :handle_commerce,
+  ecto_repos: [HandleCommerce.Repo]
 
 # Configures the endpoint
-config :ex_commerce, ExCommerceWeb.Endpoint,
+config :handle_commerce, HandleCommerceWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [
-    formats: [html: ExCommerceWeb.ErrorHTML, json: ExCommerceWeb.ErrorJSON],
+    formats: [html: HandleCommerceWeb.ErrorHTML, json: HandleCommerceWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: ExCommerce.PubSub,
+  pubsub_server: HandleCommerce.PubSub,
   live_view: [signing_salt: "tD0ZNbjn"]
 
 # Configures the mailer
@@ -27,7 +27,7 @@ config :ex_commerce, ExCommerceWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :ex_commerce, ExCommerce.Mailer, adapter: Swoosh.Adapters.Local
+config :handle_commerce, HandleCommerce.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,

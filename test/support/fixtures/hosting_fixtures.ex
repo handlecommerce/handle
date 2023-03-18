@@ -1,7 +1,7 @@
-defmodule ExCommerce.HostingFixtures do
+defmodule HandleCommerce.HostingFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `ExCommerce.Hosting` context.
+  entities via the `HandleCommerce.Hosting` context.
   """
 
   @doc """
@@ -15,7 +15,7 @@ defmodule ExCommerce.HostingFixtures do
         name: "some name",
         subdomain: "some subdomain"
       })
-      |> ExCommerce.Hosting.create_site()
+      |> HandleCommerce.Hosting.create_site()
 
     site
   end
@@ -31,7 +31,7 @@ defmodule ExCommerce.HostingFixtures do
         path: "some path",
         title: "some title"
       })
-      |> ExCommerce.Hosting.create_route()
+      |> HandleCommerce.Hosting.create_route()
 
     route
   end
