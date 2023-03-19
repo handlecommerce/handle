@@ -19,20 +19,4 @@ defmodule HandleCommerce.HostingFixtures do
 
     site
   end
-
-  @doc """
-  Generate a route.
-  """
-  def route_fixture(attrs \\ %{}) do
-    {:ok, route} =
-      attrs
-      |> Enum.into(%{
-        archived_at: ~N[2023-02-08 00:30:00],
-        path: "some path",
-        title: "some title"
-      })
-      |> HandleCommerce.Hosting.create_route()
-
-    route
-  end
 end

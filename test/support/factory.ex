@@ -22,4 +22,20 @@ defmodule HandleCommerce.Factory do
       path: "/"
     }
   end
+
+  def product_factory do
+    %HandleCommerce.Catalog.Product{
+      site: build(:site),
+      name: "My Product",
+      price: Decimal.new("1000.00"),
+      sku: sequence(:sku, &"sku-#{&1}")
+    }
+  end
+
+  def route_factory do
+    %HandleCommerce.Hosting.Route{
+      site: build(:site),
+      path: sequence(:path, &"/#{&1}")
+    }
+  end
 end

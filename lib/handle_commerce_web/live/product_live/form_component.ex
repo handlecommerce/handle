@@ -21,6 +21,7 @@ defmodule HandleCommerceWeb.ProductLive.FormComponent do
       >
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:description]} type="textarea" label="Description" />
+        <.input field={@form[:sku]} type="text" label="SKU" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Product</.button>
         </:actions>

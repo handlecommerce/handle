@@ -4,6 +4,8 @@ defmodule HandleCommerce.HostingTest do
 
   alias HandleCommerce.Hosting
 
+  import HandleCommerce.TestHelpers
+
   describe "sites" do
     alias HandleCommerce.Hosting.Site
 
@@ -75,67 +77,60 @@ defmodule HandleCommerce.HostingTest do
   describe "routes" do
     alias HandleCommerce.Hosting.Route
 
-    import HandleCommerce.HostingFixtures
-
     @invalid_attrs %{archived_at: nil, path: nil, title: nil}
 
     test "list_routes/0 returns all routes" do
-      route = route_fixture()
-      assert Hosting.list_routes() == [route]
+      route = insert(:route)
+      assert records_equal?(Hosting.list_routes(route.site), [route])
     end
 
     test "get_route!/1 returns the route with given id" do
-      route = route_fixture()
-      assert Hosting.get_route!(route.id) == route
+      route = insert(:route)
+      assert records_equal?(Hosting.get_route!(route.site, route.id), route)
     end
 
     test "create_route/1 with valid data creates a route" do
+      site = insert(:site)
+
       valid_attrs = %{
-        archived_at: ~N[2023-02-08 00:30:00],
-        path: "some path",
-        title: "some title"
+        path: "some path"
       }
 
-      assert {:ok, %Route{} = route} = Hosting.create_route(valid_attrs)
-      assert route.archived_at == ~N[2023-02-08 00:30:00]
+      assert {:ok, %Route{} = route} = Hosting.create_route(site, valid_attrs)
       assert route.path == "some path"
-      assert route.title == "some title"
     end
 
     test "create_route/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Hosting.create_route(@invalid_attrs)
+      site = insert(:site)
+      assert {:error, %Ecto.Changeset{}} = Hosting.create_route(site, @invalid_attrs)
     end
 
     test "update_route/2 with valid data updates the route" do
-      route = route_fixture()
+      route = insert(:route)
 
       update_attrs = %{
-        archived_at: ~N[2023-02-09 00:30:00],
-        path: "some updated path",
-        title: "some updated title"
+        path: "some updated path"
       }
 
       assert {:ok, %Route{} = route} = Hosting.update_route(route, update_attrs)
 
-      assert route.archived_at == ~N[2023-02-09 00:30:00]
       assert route.path == "some updated path"
-      assert route.title == "some updated title"
     end
 
     test "update_route/2 with invalid data returns error changeset" do
-      route = route_fixture()
+      route = insert(:route)
       assert {:error, %Ecto.Changeset{}} = Hosting.update_route(route, @invalid_attrs)
-      assert route == Hosting.get_route!(route.id)
+      assert records_equal?(route, Hosting.get_route!(route.site, route.id))
     end
 
     test "delete_route/1 deletes the route" do
-      route = route_fixture()
-      assert {:ok, %Route{}} = Hosting.delete_route(route)
-      assert_raise Ecto.NoResultsError, fn -> Hosting.get_route!(route.id) end
+      route = insert(:route)
+      assert {:ok, %Route{}} = Hosting.archive_route(route)
+      assert_raise Ecto.NoResultsError, fn -> Hosting.get_route!(route.site, route.id) end
     end
 
     test "change_route/1 returns a route changeset" do
-      route = route_fixture()
+      route = insert(:route)
       assert %Ecto.Changeset{} = Hosting.change_route(route)
     end
   end

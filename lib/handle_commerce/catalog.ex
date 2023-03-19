@@ -32,10 +32,10 @@ defmodule HandleCommerce.Catalog do
 
   ## Examples
 
-      iex> get_product!(123)
+      iex> get_product!(site, 123)
       %Product{}
 
-      iex> get_product!(456)
+      iex> get_product!(site, 456)
       ** (Ecto.NoResultsError)
 
   """
@@ -51,10 +51,10 @@ defmodule HandleCommerce.Catalog do
 
   ## Examples
 
-      iex> create_product(%{field: value})
+      iex> create_product(site, %{field: value})
       {:ok, %Product{}}
 
-      iex> create_product(%{field: bad_value})
+      iex> create_product(site, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
