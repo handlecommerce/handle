@@ -52,7 +52,7 @@ defmodule HandleCommerce.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:liquex, "~> 0.10.1"},
+      {:liquex, github: "handlecommerce/liquex", branch: "feature/drops"},
       {:cachex, "~> 3.6"},
       {:ex_machina, "~> 2.7.0", only: :test},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
