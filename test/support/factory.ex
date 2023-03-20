@@ -12,7 +12,8 @@ defmodule HandleCommerce.Factory do
     %HandleCommerce.Resources.Asset{
       site: build(:site),
       key: sequence(:key, &"/my/asset-#{&1}"),
-      content: "Hello World"
+      content: "Hello World",
+      type: :text
     }
   end
 

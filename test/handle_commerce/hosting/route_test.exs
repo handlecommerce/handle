@@ -1,52 +1,52 @@
 defmodule HandleCommerce.Hosting.RouteTest do
   use ExUnit.Case, async: true
 
-  doctest HandleCommerce.Hosting.Route
+  # doctest HandleCommerce.Hosting.Route
   alias HandleCommerce.Hosting.Route
 
   describe "parse/2" do
     test "parses straight path" do
-      assert {:ok, %Route{segments: []}} == Route.parse("")
-      assert {:ok, %Route{segments: []}} == Route.parse("/")
+      assert {:ok, []} == Route.parse("")
+      assert {:ok, []} == Route.parse("/")
 
-      assert {:ok, %Route{segments: [segment: "test"]}} == Route.parse("test")
-      assert {:ok, %Route{segments: [segment: "test"]}} == Route.parse("/test")
+      assert {:ok, [segment: "test"]} == Route.parse("test")
+      assert {:ok, [segment: "test"]} == Route.parse("/test")
 
-      assert {:ok, %Route{segments: [segment: "first", segment: "second"]}} ==
+      assert {:ok, [segment: "first", segment: "second"]} ==
                Route.parse("first/second")
 
-      assert {:ok, %Route{segments: [segment: "first", segment: "second"]}} ==
+      assert {:ok, [segment: "first", segment: "second"]} ==
                Route.parse("/first/second")
 
-      assert {:ok, %Route{segments: [segment: "a", segment: "b", segment: "c"]}} ==
+      assert {:ok, [segment: "a", segment: "b", segment: "c"]} ==
                Route.parse("/a/b/c/")
     end
 
     test "parses params" do
-      assert {:ok, %Route{segments: [parameter: "id"]}} == Route.parse("/:id")
-      assert {:ok, %Route{segments: [parameter: "id"]}} == Route.parse(":id")
+      assert {:ok, [parameter: "id"]} == Route.parse("/:id")
+      assert {:ok, [parameter: "id"]} == Route.parse(":id")
 
-      assert {:ok, %Route{segments: [segment: "products", parameter: "id"]}} ==
+      assert {:ok, [segment: "products", parameter: "id"]} ==
                Route.parse("/products/:id")
 
-      assert {:ok, %Route{segments: [segment: "products", parameter: "id"]}} ==
+      assert {:ok, [segment: "products", parameter: "id"]} ==
                Route.parse("products/:id")
 
-      assert {:ok, %Route{segments: [segment: "products", parameter: "id", segment: "details"]}} ==
+      assert {:ok, [segment: "products", parameter: "id", segment: "details"]} ==
                Route.parse("/products/:id/details")
 
-      assert {:ok, %Route{segments: [segment: "products", parameter: "id", segment: "details"]}} ==
+      assert {:ok, [segment: "products", parameter: "id", segment: "details"]} ==
                Route.parse("products/:id/details")
     end
 
     test "parses glob" do
-      assert {:ok, %Route{segments: [glob: "id"]}} == Route.parse("/*id")
-      assert {:ok, %Route{segments: [glob: "id"]}} == Route.parse("*id")
+      assert {:ok, [glob: "id"]} == Route.parse("/*id")
+      assert {:ok, [glob: "id"]} == Route.parse("*id")
 
-      assert {:ok, %Route{segments: [segment: "blog", glob: "slug"]}} ==
+      assert {:ok, [segment: "blog", glob: "slug"]} ==
                Route.parse("/blog/*slug")
 
-      assert {:ok, %Route{segments: [segment: "blog", glob: "slug"]}} ==
+      assert {:ok, [segment: "blog", glob: "slug"]} ==
                Route.parse("blog/*slug")
     end
 

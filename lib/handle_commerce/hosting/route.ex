@@ -38,6 +38,8 @@ defmodule HandleCommerce.Hosting.Route do
     route
     |> cast(attrs, [:path, :asset_id])
     |> validate_required([:path])
+    |> foreign_key_constraint(:asset_id)
+    |> foreign_key_constraint(:site_id)
   end
 
   def for_site(queryable \\ __MODULE__, %Site{id: site_id}) do
